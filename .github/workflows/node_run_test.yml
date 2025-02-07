@@ -29,9 +29,10 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16.13.0'
-          cache: 'npm'
+          node-version: '20.10.0'
       
+      - name: Set working directory
+        run: cd backend    
       - name: Install dependencies
         run: npm install
       
