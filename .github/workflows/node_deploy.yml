@@ -1,0 +1,48 @@
+name: Deploy Node Backend
+
+on: 
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+  push:
+    branches: 
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print PATH
+        run: echo $PATH
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch || github.ref_name }}
+
+      - name: List files
+        run: ls -la
+      
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.10.0'
+
+      - name: Ensure backend directory exists
+        run: |
+          if [ ! -d "backend" ]; then
+            echo "Backend directory not found!"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: backend
+      
+      - name: Deploy Node Backend
+        run: node app.js
+        working-directory: backend
